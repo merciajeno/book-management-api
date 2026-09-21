@@ -133,62 +133,6 @@ GET /api/books?page=0&size=5&sort=title,asc
 
 This is separate from `@NotNull`, which handles a missing year.
 
-## Simple architecture
-
-```text
-Controller
-   |
-   v
-Service
-   |
-   v
-Repository
-   |
-   v
-PostgreSQL
-```
-
-Authentication:
-
-```text
-Login
-  |
-  v
-AuthenticationManager
-  |
-  v
-CustomUserService
-  |
-  v
-UserRepository -> PostgreSQL
-  |
-  v
-BCrypt password check
-  |
-  v
-JwtService -> JWT
-```
-
-Request authentication:
-
-```text
-Request
-  |
-  v
-JwtAuthenticationFilter
-  |
-  v
-JwtService validates token
-  |
-  v
-CustomUserService loads user
-  |
-  v
-SecurityContext
-  |
-  v
-BookController
-```
 
 ## Important development note
 
