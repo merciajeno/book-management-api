@@ -33,6 +33,7 @@ public class AuthController {
         return authService.login(request);
     }
 
+    // just for trial, using refresh param. In production, not recommended as we are exposing it in the URL.
     @PostMapping("/refresh")
     public AuthResponse refresh(
             @RequestParam String refreshToken) {

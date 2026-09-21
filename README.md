@@ -14,15 +14,7 @@ A small Spring Boot REST API for practicing:
 - JWT authentication filter
 - PostgreSQL
 - Spring Boot DevTools
-
-## Intentionally NOT included yet
-
-As requested, this version does **not** contain:
-
-- Refresh tokens
-- Transaction rollback demo
-
-Those can be added as the next step after the basic API is understood.
+- Refresh Tokens
 
 ## Requirements
 
@@ -201,3 +193,9 @@ BookController
 ## Important development note
 
 `spring.jpa.hibernate.ddl-auto=update` is used to keep this project simple for the exercise. For a larger production project, database migrations such as Flyway/Liquibase are worth introducing.
+
+## Refresh Token
+The expiry time for access token is set to 30 seconds to demonstrate the use of refresh tokens here. The expiry time for refresh token is 7 days. 
+To get fresh access token using refresh token:
+POST: /auth/refresh?refreshToken=<ur_token>
+The endpoint is an open-endpoint .
