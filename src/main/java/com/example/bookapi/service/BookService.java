@@ -72,7 +72,7 @@ public class BookService {
 
         bookRepository.save(book2);
 
-        // Simulate something going wrong
+        // Deliberately creating problem here
         throw new RuntimeException("Something went wrong!");
     }
 }

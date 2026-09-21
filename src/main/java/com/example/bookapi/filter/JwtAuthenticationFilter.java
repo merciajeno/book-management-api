@@ -65,7 +65,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             // Invalid/expired JWT is simply treated as unauthenticated.
         	System.out.println(e.getMessage());
         }
-
+        
+        // go to the next filter chain
         filterChain.doFilter(request, response);
     }
 }

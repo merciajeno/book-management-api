@@ -8,17 +8,20 @@ import com.example.bookapi.user.User;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+// authentication service class
 @Service
 public class AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
-    private final org.springframework.security.core.userdetails.UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
     private final JwtService jwtService;
     private final RefreshTokenService refreshTokenService;
 
@@ -26,7 +29,7 @@ public class AuthService {
             UserRepository userRepository,
             PasswordEncoder passwordEncoder,
             AuthenticationManager authenticationManager,
-            org.springframework.security.core.userdetails.UserDetailsService userDetailsService,
+            UserDetailsService userDetailsService,
             JwtService jwtService,
             RefreshTokenService refreshTokenService) {
 
@@ -40,10 +43,12 @@ public class AuthService {
 
     public void register(AuthRequest request) {
 
+    	//checks if exists
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new IllegalArgumentException("Username already exists");
         }
 
+        //creates new User object
         User user = new User(
                 request.getUsername(),
                 passwordEncoder.encode(request.getPassword())
@@ -54,20 +59,21 @@ public class AuthService {
 
     public AuthResponse login(AuthRequest request) {
 
-        authenticationManager.authenticate(
+    	
+        Authentication authenticate = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
                         request.getPassword()
                 )
         );
 
-        UserDetails userDetails =
-                userDetailsService.loadUserByUsername(
-                        request.getUsername()
-                );
+        UserDetails userDetails =(UserDetails) authenticate.getPrincipal();
+//                userDetailsService.loadUserByUsername(
+//                        request.getUsername()
+//                );// it is redundant and not needed
 
         String accessToken =
-                jwtService.generateToken(userDetails);
+                jwtService.generateToken(userDetails.getUsername());
 
         User user =
                 userRepository.findByUsername(request.getUsername())
@@ -98,7 +104,7 @@ public class AuthService {
                 );
 
         String newAccessToken =
-                jwtService.generateToken(userDetails);
+                jwtService.generateToken(userDetails.getUsername());
 
         return new AuthResponse(
                 newAccessToken,

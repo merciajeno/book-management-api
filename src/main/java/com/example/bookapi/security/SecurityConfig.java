@@ -28,7 +28,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                .csrf(csrf -> csrf.disable()) 
                 .authorizeHttpRequests(auth -> auth
@@ -43,19 +43,19 @@ public class SecurityConfig {
     }
 
     @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
+    DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider(customUserService);
         provider.setPasswordEncoder(passwordEncoder());
         return provider;
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(
+    AuthenticationManager authenticationManager(
             AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
